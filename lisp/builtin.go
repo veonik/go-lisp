@@ -2,6 +2,7 @@ package lisp
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -21,6 +22,8 @@ var builtin_commands = map[string]string{
 	"cons":           "Cons",
 	"car":            "Car",
 	"cdr":            "Cdr",
+	"string-val":     "StringVal",
+	"number-val":     "NumberVal",
 	"string?":        "StringHuh",
 	"string=?":       "StringEqualHuh",
 	"string-length":  "StringLength",
@@ -184,6 +187,35 @@ func (Builtin) Lte(vars ...Value) (Value, error) {
 		}
 	}
 	return True, nil
+}
+
+func (Builtin) StringVal(vars ...Value) (Value, error) {
+	if len(vars) != 1 {
+		return badlyFormattedArguments(vars)
+	}
+	switch {
+	case vars[0].typ == stringValue:
+		return vars[0], nil
+
+	case vars[0].typ == numberValue:
+		return StringValue(strconv.FormatFloat(vars[0].Number(), 'f', 10, 64)), nil
+	}
+	return Nil, nil
+}
+
+func (Builtin) NumberVal(vars ...Value) (Value, error) {
+	if len(vars) != 1 {
+		return badlyFormattedArguments(vars)
+	}
+	switch {
+	case vars[0].typ == stringValue:
+		val, _ := strconv.ParseFloat(vars[0].String(), 64)
+		return NumberValue(val), nil
+
+	case vars[0].typ == numberValue:
+		return vars[0], nil
+	}
+	return Nil, nil
 }
 
 func (Builtin) StringHuh(vars ...Value) (Value, error) {
