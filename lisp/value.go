@@ -14,6 +14,18 @@ var Nil = Value{nilValue, nil}
 var False = Value{symbolValue, "false"}
 var True = Value{symbolValue, "true"}
 
+func StringValue(s string) Value {
+	return Value{stringValue, s}
+}
+
+func SymbolValue(s string) Value {
+	return Value{symbolValue, s}
+}
+
+func NumberValue(n float64) Value {
+	return Value{numberValue, n}
+}
+
 type valueType uint8
 
 const (
