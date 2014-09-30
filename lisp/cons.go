@@ -217,12 +217,18 @@ func (cons Cons) isBuiltin() bool {
 	s := cons.car.String()
 	if _, ok := builtin_commands[s]; ok {
 		return true
+	} else if _, ok = builtin_handlers[s]; ok {
+		return true
 	}
 	return false
 }
 
 func (cons Cons) runBuiltin() (val Value, err error) {
-	cmd := builtin_commands[cons.car.String()]
+	var handler BuiltinHandler
+	cmd, ok := builtin_commands[cons.car.String()]
+	if !ok {
+		handler = builtin_handlers[cons.car.String()]
+	}
 	var result []reflect.Value
 	if cons.cdr.typ == nilValue {
 		result = reflect.ValueOf(&builtin).MethodByName(cmd).Call(nil)
@@ -234,7 +240,11 @@ func (cons Cons) runBuiltin() (val Value, err error) {
 		for _, v := range vars {
 			values = append(values, reflect.ValueOf(v))
 		}
-		result = reflect.ValueOf(&builtin).MethodByName(cmd).Call(values)
+		if ok {
+			result = reflect.ValueOf(&builtin).MethodByName(cmd).Call(values)
+		} else {
+			result = reflect.ValueOf(handler).Call(values)
+		}
 	}
 	val = result[0].Interface().(Value)
 	err, _ = result[1].Interface().(error)

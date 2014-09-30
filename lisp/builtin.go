@@ -24,6 +24,14 @@ var builtin_commands = map[string]string{
 	"string-append": "StringAppend",
 }
 
+type BuiltinHandler func(vars ...Value) (Value, error)
+
+var builtin_handlers = make(map[string]BuiltinHandler)
+
+func AddBuiltin(name string, handler BuiltinHandler) {
+	builtin_handlers[name] = handler
+}
+
 func (Builtin) Display(vars ...Value) (Value, error) {
 	if len(vars) == 1 {
 		fmt.Println(vars[0])
