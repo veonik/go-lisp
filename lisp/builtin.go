@@ -28,6 +28,9 @@ var builtin_commands = map[string]string{
 	"string-start=?": "StringStartEqualHuh",
 	"string-end=?":   "StringEndEqualHuh",
 	"string-match?":  "StringMatchHuh",
+	"string-index":   "StringIndex",
+	"string-first":   "StringFirst",
+	"string-last":    "StringLast",
 }
 
 type BuiltinHandler func(vars ...Value) (Value, error)
@@ -257,6 +260,41 @@ func (Builtin) StringMatchHuh(vars ...Value) (Value, error) {
 		return True, nil
 	}
 	return False, nil
+}
+
+func (Builtin) StringIndex(vars ...Value) (Value, error) {
+	if len(vars) != 2 {
+		return badlyFormattedArguments(vars)
+	}
+
+	return NumberValue(float64(strings.Index(vars[0].String(), vars[1].String()))), nil
+}
+
+func (Builtin) StringFirst(vars ...Value) (Value, error) {
+	if len(vars) != 2 {
+		return badlyFormattedArguments(vars)
+	}
+
+	n := int(vars[1].Number())
+	val := vars[0].String()
+	if n < 0 {
+		return StringValue(val[0 : len(val)+n]), nil
+	}
+
+	return StringValue(val[0:n]), nil
+}
+
+func (Builtin) StringLast(vars ...Value) (Value, error) {
+	if len(vars) != 2 {
+		return badlyFormattedArguments(vars)
+	}
+
+	n := int(vars[1].Number())
+	val := vars[0].String()
+	if n < 0 {
+		return StringValue(val[-n:]), nil
+	}
+	return StringValue(val[len(val)-n:]), nil
 }
 
 func badlyFormattedArguments(vars []Value) (Value, error) {
