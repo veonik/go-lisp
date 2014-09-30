@@ -27,6 +27,7 @@ var builtin_commands = map[string]string{
 	"string-append":  "StringAppend",
 	"string-start=?": "StringStartEqualHuh",
 	"string-end=?":   "StringEndEqualHuh",
+	"string-match?":  "StringMatchHuh",
 }
 
 type BuiltinHandler func(vars ...Value) (Value, error)
@@ -243,6 +244,16 @@ func (Builtin) StringEndEqualHuh(vars ...Value) (Value, error) {
 		return badlyFormattedArguments(vars)
 	}
 	if strings.HasSuffix(vars[0].String(), vars[1].String()) {
+		return True, nil
+	}
+	return False, nil
+}
+
+func (Builtin) StringMatchHuh(vars ...Value) (Value, error) {
+	if len(vars) != 2 {
+		return badlyFormattedArguments(vars)
+	}
+	if strings.Contains(vars[0].String(), vars[1].String()) {
 		return True, nil
 	}
 	return False, nil
