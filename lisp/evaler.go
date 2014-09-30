@@ -1,6 +1,14 @@
 package lisp
 
+var executionLimit = 0
+var currentDepth = 0
+
+func SetExecutionLimit(n int) {
+	executionLimit = n
+}
+
 func EvalString(line string) (Value, error) {
+	currentDepth = 0
 	expanded, err := NewTokens(line).Expand()
 	if err != nil {
 		return Nil, err
