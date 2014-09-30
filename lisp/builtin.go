@@ -1,34 +1,39 @@
 package lisp
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type Builtin struct{}
 
 var builtin = Builtin{}
 
 var builtin_commands = map[string]string{
-	"+":             "Add",
-	"-":             "Sub",
-	"*":             "Mul",
-	">":             "Gt",
-	"<":             "Lt",
-	">=":            "Gte",
-	"<=":            "Lte",
-	"display":       "Display",
-	"cons":          "Cons",
-	"car":           "Car",
-	"cdr":           "Cdr",
-	"string?":       "StringHuh",
-	"string=?":      "StringEqualHuh",
-	"string-length": "StringLength",
-	"string-append": "StringAppend",
+	"+":              "Add",
+	"-":              "Sub",
+	"*":              "Mul",
+	">":              "Gt",
+	"<":              "Lt",
+	">=":             "Gte",
+	"<=":             "Lte",
+	"display":        "Display",
+	"cons":           "Cons",
+	"car":            "Car",
+	"cdr":            "Cdr",
+	"string?":        "StringHuh",
+	"string=?":       "StringEqualHuh",
+	"string-length":  "StringLength",
+	"string-append":  "StringAppend",
+	"string-start=?": "StringStartEqualHuh",
+	"string-end=?":   "StringEndEqualHuh",
 }
 
 type BuiltinHandler func(vars ...Value) (Value, error)
 
 var builtin_handlers = make(map[string]BuiltinHandler)
 
-func AddBuiltin(name string, handler BuiltinHandler) {
+func SetHandler(name string, handler BuiltinHandler) {
 	builtin_handlers[name] = handler
 }
 
@@ -221,6 +226,26 @@ func (Builtin) StringAppend(vars ...Value) (Value, error) {
 		}
 	}
 	return Value{stringValue, result}, nil
+}
+
+func (Builtin) StringStartEqualHuh(vars ...Value) (Value, error) {
+	if len(vars) != 2 {
+		return badlyFormattedArguments(vars)
+	}
+	if strings.HasPrefix(vars[0].String(), vars[1].String()) {
+		return True, nil
+	}
+	return False, nil
+}
+
+func (Builtin) StringEndEqualHuh(vars ...Value) (Value, error) {
+	if len(vars) != 2 {
+		return badlyFormattedArguments(vars)
+	}
+	if strings.HasSuffix(vars[0].String(), vars[1].String()) {
+		return True, nil
+	}
+	return False, nil
 }
 
 func badlyFormattedArguments(vars []Value) (Value, error) {
