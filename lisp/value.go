@@ -41,7 +41,7 @@ const (
 func (v Value) Eval() (Value, error) {
 	currentDepth++
 	if executionLimit > 0 && currentDepth > executionLimit {
-		panic("Execution limit reached")
+		panic(halt)
 	}
 	switch v.typ {
 	case consValue:

@@ -14,7 +14,7 @@ type Cons struct {
 func (c Cons) Eval() (val Value, err error) {
 	currentDepth++
 	if executionLimit > 0 && currentDepth > executionLimit {
-		panic("Execution limit reached")
+		panic(halt)
 	}
 	if c.List() {
 		if v, err := c.car.Eval(); err != nil {

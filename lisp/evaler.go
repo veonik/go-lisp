@@ -1,7 +1,10 @@
 package lisp
 
+import "errors"
+
 var executionLimit = 0
 var currentDepth = 0
+var halt = errors.New("Execution limit exceeded")
 
 func SetExecutionLimit(n int) {
 	executionLimit = n
