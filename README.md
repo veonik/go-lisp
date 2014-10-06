@@ -1,14 +1,9 @@
 go-lisp.go
 ==========
 
-A simple Lisp interpreter developed in Go.
+A simple Lisp interpreter developed in Go, forked from https://github.com/janne/go-lisp/lisp.
 
-Go is a perfect fit for building a Lisp interpreter, since it's portable,
-garbage collected and fast. The result is a one file distribution, which makes
-it easy to deploy. The garbage collection unloads that work from the
-interpreter, using the Go already tuned GC.
-
-Inspired by: [http://norvig.com/lispy.html]()
+This implementations builtins differ from Common Lisp. It contains additional builtins for handling strings.
 
 Setup
 -----
@@ -24,15 +19,15 @@ Setup
 
 #### Clone the repo
 
-    $ go get github.com/janne/go-lisp
+    $ go get github.com/veonik/go-lisp
 
 #### Run the tests
 
-    $ go test github.com/janne/go-lisp/lisp
+    $ go test github.com/veonik/go-lisp/lisp
 
 #### Run the example
 
-    $ go-lisp -file $HOME/go/src/github.com/janne/go-lisp/example.lsp
+    $ go-lisp -file $HOME/go/src/github.com/veonik/go-lisp/example.lsp
 
 #### Run it interactively
 
@@ -106,3 +101,19 @@ the procedure is called with the list of expressions as arguments.
 Returns:
 
     144
+
+
+#### Other functions
+
+* number-val
+* string-val
+* string?
+* string=?    
+* string-length
+* string-append
+* string-start=?
+* string-end=?
+* string-match?
+* string-index
+* string-first
+* string-last
